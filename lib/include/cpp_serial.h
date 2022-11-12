@@ -13,4 +13,18 @@
 
 #include "exception.h"
 
+namespace CppSerial {
+
+    // STANDARD represents all the standards baud rates as provided by UNIX, CUSTOM represents a baud rate defined by arbitrary integer.
+
+    enum class BaudRateType {
+        STANDARD,
+        CUSTOM,
+    };
+
+    enum class BaudRate {
+        
+    };
+}
+
 #endif
