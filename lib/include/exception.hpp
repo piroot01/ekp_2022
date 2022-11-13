@@ -1,4 +1,6 @@
-// Contains the Exception class.
+//
+// Exception class.
+//
 
 #ifndef CPP_SERIAL_EXCEPTIO_H_
 #define CPP_SERIAL_EXCEPTIO_H_
@@ -27,7 +29,8 @@ namespace CppSerial {
     private:
 
         std::string msg_;
-};
+    };
+}
 
 #define THROW_EXCEPT(arg) throw Exception(__FILE__, __LINE__, arg);
 

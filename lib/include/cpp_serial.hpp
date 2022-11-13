@@ -1,3 +1,7 @@
+//
+// The main serial port class.
+//
+
 #ifndef CPP_SERIAL_H
 #define CPP_SERIAL_H
 
@@ -10,7 +14,7 @@
 #include <asm/termbits.h>
 
 // User headers
-#include "exception.h"
+#include "exception.hpp"
 
 namespace CppSerial {
 
