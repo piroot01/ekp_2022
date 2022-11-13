@@ -67,7 +67,7 @@ namespace CppSerial {
         } catch(...) {}
     }
 
-    void SerialPort::SetDevice(const std::string &device) {
+    void SerialPort::SetDevice(const std::string& device) {
         device_ = device;
         if (state_ == State::OPEN)
             ConfigureTermios();
@@ -106,20 +106,14 @@ namespace CppSerial {
 	}
 
     void SerialPort::Open() {
-        if (device_.empty()) {
-            THROW_EXCEPT("Attempted to open file when file path has not been assigned to.");
-        }
+        if (device_.empty()) THROW_EXCEPT("Attempted to open file when file path has not been assigned to.");
         
         // Attempt to open a file.
         fileDesc_ = open(device_.c_str(), O_RDWR);
         
         // Check status.
-        if( fileDesc_ == -1 ) {
-		    THROW_EXCEPT("Could not open device " + device_ + ". Is the device name correct and do you have read/write permission?");
-		}
-        
+        if( fileDesc_ == -1 ) THROW_EXCEPT("Could not open device " + device_ + ". Is the device name correct and do you have read/write permission?");
         ConfigureTermios();
-
         state_ = State::OPEN;
     }
 
@@ -129,62 +123,58 @@ namespace CppSerial {
     }
 
     void SerialPort::ConfigureTermios() {
-        
-        // configure
         termios2 tty = GetTermios2();
-        
+
         // .c_cflag
         tty.c_cflag &= ~CSIZE;
-        
-        // Set number of data bits.
-        switch(numDataBits_) {
+        switch (numDataBits_) {
             case NumDataBits::FIVE:
-                tty.c_cflag     |=  CS5;
+                tty.c_cflag |= CS5;
                 break;
             case NumDataBits::SIX:
-                tty.c_cflag     |=  CS6;
+                tty.c_cflag |= CS6;
                 break;
             case NumDataBits::SEVEN:
-                tty.c_cflag     |=  CS7;
+                tty.c_cflag |= CS7;
                 break;
             case NumDataBits::EIGHT:
-                tty.c_cflag     |=  CS8;
+                tty.c_cflag |= CS8;
                 break;
             default:
                 THROW_EXCEPT("numDataBits_ value not supported!");
         }
 
-        // Set the parity.
-        switch(parity_) {
+        // Set parity.
+        switch (parity_) {
             case Parity::NONE:
-                tty.c_cflag     &=  ~PARENB;
+                tty.c_cflag &= ~PARENB;
                 break;
             case Parity::EVEN:	
-                tty.c_cflag 	|=   PARENB;
-                tty.c_cflag		&=	 ~PARODD;
+                tty.c_cflag |= PARENB;
+                tty.c_cflag	&= ~PARODD;
                 break;
             case Parity::ODD:
-                tty.c_cflag     |=   PARENB;
-                tty.c_cflag		|=	 PARODD;
+                tty.c_cflag |= PARENB;
+                tty.c_cflag	|= PARODD;
                 break;
             default:
                 THROW_EXCEPT("parity_ value not supported!");
         }
 
-        // Set number of stop bits.
-        switch(numStopBits_) {
+		// Set number of stop bits.
+        switch (numStopBits_) {
             case NumStopBits::ONE:
-                tty.c_cflag     &=  ~CSTOPB;
+                tty.c_cflag &= ~CSTOPB;
                 break;
             case NumStopBits::TWO:
-                tty.c_cflag     |=  CSTOPB;
+                tty.c_cflag |= CSTOPB;
                 break;
             default:
                 THROW_EXCEPT("numStopBits_ value not supported!");
         }
 
-        tty.c_cflag &= ~CRTSCTS; // Disable hardware flow control.
-        tty.c_cflag |= CREAD | CLOCAL; // Turn on READ & ignore ctrl lines.
+        tty.c_cflag &= ~CRTSCTS;
+        tty.c_cflag |= CREAD | CLOCAL;
 
         // baud rate
         if (baudRateType_ == BaudRateType::STANDARD) {
@@ -283,9 +273,9 @@ namespace CppSerial {
             assert(false);
         }
 
-        // .c_oflag
-        tty.c_cflag = 0;
-        tty.c_oflag &= ~OPOST;
+        //.c_oflag
+        tty.c_oflag     =   0;
+        tty.c_oflag     &=  ~OPOST;
 
         // .c_cc[]
         if (timeout_ms_ == -1) {
@@ -300,25 +290,24 @@ namespace CppSerial {
         }
 
         // .c_iflag
-        tty.c_iflag     &= ~(IXON | IXOFF | IXANY);
-        tty.c_iflag 	&= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL);
+        tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+        tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL);
 
-		// .c_lflag)
-        tty.c_lflag		&= ~ICANON;
+        // .c_lflag) 
+        tty.c_lflag	&= ~ICANON;
 
-        // Configure echo depending on echo_ boolean.
         if (echo_) {
             tty.c_lflag |= ECHO;
         } else {
             tty.c_lflag &= ~(ECHO);
         }
 
-        tty.c_lflag		&= ~ECHOE;
-        tty.c_lflag		&= ~ECHONL;
-        tty.c_lflag		&= ~ISIG;
-
+        tty.c_lflag	&= ~ECHOE;
+        tty.c_lflag	&= ~ECHONL;
+        tty.c_lflag	&= ~ISIG;
+		
         this->SetTermios2(tty);
-    }
+	}
 
     void SerialPort::Write(const std::string& data) {
         if (state_ != State::OPEN) THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");

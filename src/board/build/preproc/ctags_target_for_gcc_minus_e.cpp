@@ -1,3 +1,4 @@
+# 1 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 //
 // board.ino
 //
@@ -6,14 +7,14 @@ char inputChar;
 bool bufferComplete = false;
 
 void
-setup() 
+setup()
 {
     // Initialize serial communication.
     Serial.begin(9600);
 }
 
 void
-loop() 
+loop()
 {
     // Check if the buffer is complete.
     if (bufferComplete) {
@@ -29,7 +30,7 @@ void
 serialEvent()
 {
     while (Serial.available()) {
-        
+
         // Store one byte from buffer.
         char tmpChar = (char)Serial.read();
 

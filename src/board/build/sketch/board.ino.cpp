@@ -1,9 +1,18 @@
+#include <Arduino.h>
+#line 1 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 //
 // board.ino
 //
 
 char inputChar;
 bool bufferComplete = false;
+#line 7 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+void setup();
+#line 14 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+void loop();
+#line 27 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+void serialEvent();
+#line 7 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 
 void
 setup() 
@@ -37,3 +46,4 @@ serialEvent()
         else inputChar = tmpChar;
     }
 }
+
