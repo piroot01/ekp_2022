@@ -3,6 +3,7 @@
 //
 
 // system headers
+#include <iostream>
 #include <chrono>
 #include <thread>
 #include <string>
@@ -10,14 +11,34 @@
 // user headers
 #include "../lib/include/cpp_serial.hpp"
 
-#define WAIT_FOR_SERIAL_INIT 2000
+#define BUFFER_END 0x0D
+#define SERIAL_INIT "i"
 
 using namespace CppSerial;
+
+// Check the read buffer in some period.
+void
+wait_for_board(SerialPort& Serial, std::string& buffer, time_t& sleep)
+{
+    while (1) {
+        Serial.Read(buffer);
+        if (buffer.compare(SERIAL_INIT) == 0)
+            break;
+        else
+            std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+    }
+}
 
 int
 main()
 {
-    char myMessage[2] = {'i', '\r'};
+    // Period of checking arduino activity.
+    time_t initPer = 100;
+
+    // Message to write to serial port.
+    char myMessage[2] = {'h', BUFFER_END};
+
+    // Read buffer.
     std::string readBuffer;
 
     // Set the parameters for serial communication.
@@ -29,9 +50,9 @@ main()
     // Open serial port.
     mySerial.Open();
 
-    // Wait for 2 seconds to establish serial communication.
-    std::this_thread::sleep_for(std::chrono::milliseconds(WAIT_FOR_SERIAL_INIT));
-    
+    // Wait until the board is ready for communication.
+    wait_for_board(mySerial, readBuffer, initPer);
+
     // Send my message.
     mySerial.Write(myMessage);
     

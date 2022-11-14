@@ -4,21 +4,27 @@
 // board.ino
 //
 
+#define SERIAL_READY 'i'
+
 char inputChar;
 bool bufferComplete = false;
-#line 7 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 9 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void setup();
-#line 14 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 20 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void loop();
-#line 27 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 33 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void serialEvent();
-#line 7 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 9 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 
 void
 setup() 
 {
     // Initialize serial communication.
-    Serial.begin(9600);
+    Serial.begin(9600, SERIAL_8N1);
+    pinMode(13, OUTPUT);
+    digitalWrite(13, LOW);
+    if (Serial)
+        Serial.print(SERIAL_READY);
 }
 
 void
@@ -28,7 +34,7 @@ loop()
     if (bufferComplete) {
 
         // Printed only if the correct char is received.
-        if (inputChar == 'i') Serial.print('a');
+        if (inputChar == 'h') Serial.print('a');
 
         bufferComplete = false;
     }

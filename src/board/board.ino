@@ -2,6 +2,8 @@
 // board.ino
 //
 
+#define SERIAL_READY 'i'
+
 char inputChar;
 bool bufferComplete = false;
 
@@ -9,7 +11,11 @@ void
 setup() 
 {
     // Initialize serial communication.
-    Serial.begin(9600);
+    Serial.begin(9600, SERIAL_8N1);
+    pinMode(13, OUTPUT);
+    digitalWrite(13, LOW);
+    if (Serial)
+        Serial.print(SERIAL_READY);
 }
 
 void
@@ -19,7 +25,7 @@ loop()
     if (bufferComplete) {
 
         // Printed only if the correct char is received.
-        if (inputChar == 'i') Serial.print('a');
+        if (inputChar == 'h') Serial.print('a');
 
         bufferComplete = false;
     }
