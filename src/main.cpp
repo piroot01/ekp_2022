@@ -44,10 +44,11 @@ main(int argc, char** argv)
 
     GetOpt getOpt(argc, argv);
 
-getOpt.Opt()
+    std::string port;
+    getOpt.Opt(port);
 
     // Set the parameters for serial communication.
-    SerialPort mySerial("/dev/ttyACM0", BaudRate::B_9600, NumDataBits::EIGHT, Parity::NONE, NumStopBits::ONE);
+    SerialPort mySerial(port, BaudRate::B_9600, NumDataBits::EIGHT, Parity::NONE, NumStopBits::ONE);
 
     // Set timeout.
     mySerial.SetTimeout(-1);

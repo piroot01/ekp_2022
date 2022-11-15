@@ -3,6 +3,7 @@
 //
 
 // system headers
+#include <cstdlib>
 #include <string>
 #include <iostream>
 
@@ -33,14 +34,15 @@ GetOpt::GetOpt(int& argc, char** argv) {
 }
 
 void GetOpt::ShowUsage() {
-    std::cerr << help_1_ << prg_name_ << help_2_;
+    std::cerr << help_1_ << prg_name_ << help_2_ << std::endl;
+    exit(EXIT_SUCCESS);
 }
 
 std::string& GetOpt::GetPort() {
     return opt_val_;
 }
 
-void GetOpt::Opt() {
+void GetOpt::Opt(std::string& port_) {
     
     // Option set to help.
     if ((opt_ == option_.help) || (opt_ == option_.Help)) {
@@ -56,7 +58,7 @@ void GetOpt::Opt() {
 
         //Check if number of argumets is 3.
         if (argc_ == PATH_TO_PORT)
-            GetPort();
+            port_ = GetPort();
         else
             THROW_EXCEPT("Port not specified.");
 

@@ -18,14 +18,14 @@ public:
     void ShowUsage();
     
     // Determine which option is used.
-    void Opt();
+    void Opt(std::string& port);
 
     // Return path to port (everything after -p/--port option) or show help message.
     std::string& GetPort();
 private:
 
-    // Empty string.
-    std::string null_ = "";
+    // Path to port.
+    std::string port_ = "";
 
     // Strings for program name, option and option value.
     std::string prg_name_, opt_, opt_val_;
