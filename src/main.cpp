@@ -43,10 +43,10 @@ main()
 
     // Set the parameters for serial communication.
     SerialPort mySerial("/dev/ttyACM0", BaudRate::B_9600, NumDataBits::EIGHT, Parity::NONE, NumStopBits::ONE);
-    
+
     // Set timeout.
     mySerial.SetTimeout(-1);
-    
+
     // Open serial port.
     mySerial.Open();
 
@@ -55,7 +55,7 @@ main()
 
     // Send my message.
     mySerial.Write(myMessage);
-    
+
     // Read the answer.
     mySerial.Read(readBuffer);
 
