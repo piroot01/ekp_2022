@@ -1,5 +1,5 @@
 //
-// The get option class
+// The get-option class
 //
 
 // system headers
@@ -19,11 +19,11 @@ GetOpt::GetOpt(int& argc, char** argv) {
     //Assign individual arguments.
     switch (argc_) {
         case 3:
-            opt_val_ = argv[2];
+            optVal_ = argv[2];
         case 2:
             opt_ = argv[1];
         case 1:
-            prg_name_ = argv[0];
+            prgName_ = argv[0];
             break;
         default:
 
@@ -34,12 +34,12 @@ GetOpt::GetOpt(int& argc, char** argv) {
 }
 
 void GetOpt::ShowUsage() {
-    std::cerr << help_1_ << prg_name_ << help_2_ << std::endl;
+    std::cerr << help_1_ << prgName_ << help_2_ << std::endl;
     exit(EXIT_SUCCESS);
 }
 
 std::string& GetOpt::GetPort() {
-    return opt_val_;
+    return optVal_;
 }
 
 void GetOpt::Opt(std::string& port_) {

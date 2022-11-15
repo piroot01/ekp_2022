@@ -11,53 +11,50 @@
 // user headers
 #include "../lib/include/cpp_serial.hpp"
 #include "../include/get_opt.hpp"
+#include "../include/board.hpp"
 
 #define BUFFER_END 0x0D
 #define SERIAL_INIT "i"
 
 using namespace CppSerial;
 
-// Check the read buffer in some period.
-void
-wait_for_board(SerialPort& Serial, std::string& buffer, time_t& sleep)
-{
-    while (1) {
-        Serial.Read(buffer);
-        if (buffer.compare(SERIAL_INIT) == 0)
-            break;
-        else
-            std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
-    }
-}
-
 int
 main(int argc, char** argv)
 {
     // Period of checking arduino activity.
-    time_t initPer = 100;
+    time_t updatePer = 100;
 
     // Message to write to serial port.
     char myMessage[2] = {'h', BUFFER_END};
 
     // Read buffer.
     std::string readBuffer;
-
-    GetOpt getOpt(argc, argv);
-
+    
+    // String that stores path to selected port.
     std::string port;
+
+    // Create object getOpt.
+    GetOpt getOpt(argc, argv);
+    
+    // Load the port path.
     getOpt.Opt(port);
+    
+    Board myBoard;
 
     // Set the parameters for serial communication.
     SerialPort mySerial(port, BaudRate::B_9600, NumDataBits::EIGHT, Parity::NONE, NumStopBits::ONE);
 
     // Set timeout.
     mySerial.SetTimeout(-1);
-
+    
     // Open serial port.
     mySerial.Open();
 
+    // Flush serial buffer
+    mySerial.FlushSerialBuff();
+    
     // Wait until the board is ready for communication.
-    wait_for_board(mySerial, readBuffer, initPer);
+    myBoard.WaitForSerialInit(mySerial, readBuffer);
 
     // Send my message.
     mySerial.Write(myMessage);

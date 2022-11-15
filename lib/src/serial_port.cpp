@@ -23,8 +23,6 @@
 #include "../include/exception.hpp"
 #include "../include/cpp_serial.hpp"
 
-#define BOTHER 0010000
-
 namespace CppSerial {
 
     SerialPort::SerialPort() {
@@ -311,6 +309,18 @@ namespace CppSerial {
         this->SetTermios2(tty);
 	}
 
+    void SerialPort::FlushRecv() {
+        ioctl(fileDesc_, TCFLSH, 0);
+    }
+
+    void SerialPort::FlushTran() {
+        ioctl(fileDesc_, TCFLSH, 1);
+    }
+
+    void SerialPort::FlushSerialBuff() {
+        ioctl(fileDesc_, TCFLSH, 2);
+    }
+
     void SerialPort::Write(const std::string& data) {
         if (state_ != State::OPEN) 
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
@@ -362,7 +372,7 @@ namespace CppSerial {
     void SerialPort::SetTermios2(termios2 tty) {
         ioctl(fileDesc_, TCSETS2, &tty);
     }
-
+    
     void SerialPort::Close() {
         if (fileDesc_ != -1) {
             auto retVal = close(fileDesc_);

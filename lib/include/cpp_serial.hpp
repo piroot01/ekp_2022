@@ -93,7 +93,7 @@ namespace CppSerial {
         // Destructor. Closes serial port if still open.
         virtual ~SerialPort();
 
-        // Sets the device to use for serial port communications.
+        // Set the device to use for serial port communications.
         void SetDevice(const std::string &device);
 
         // Call this to set a standard baud rate.
@@ -108,24 +108,34 @@ namespace CppSerial {
         // Call this to set the parity.
         void SetParity(Parity parity);
 
+        // Call this to set number of stop bits.
         void SetNumStopBits(NumStopBits numStopBits);
 
-        // Sets the read timeout (in milliseconds)/blocking mode.
+        // Set the read timeout (in milliseconds)/blocking mode.
         void SetTimeout(int32_t timeout_ms);
 
         // Enables/disables echo.
         void SetEcho(bool value);
 
-        // Opens the COM port for use.
+        // Open the COM port for use.
         void Open();
 
-        // Closes the COM port.
+        // Close the COM port.
         void Close();
+        
+        // Flush receiving buffer
+        void FlushRecv();
 
-        // Sends a text message over the com port.
+        // Flush transmitting buffer.
+        void FlushTran();
+
+        // Flush both buffers.
+        void FlushSerialBuff();
+
+        // Send a text message over the com port.
         void Write(const std::string& data);
 
-        // Sends a binary message over the com port.
+        // Send a binary message over the com port.
         void WriteBinary(const std::vector<uint8_t>& data);
 
         // Use to read text from the COM port.

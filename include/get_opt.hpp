@@ -1,5 +1,5 @@
 //
-// The get option header.
+// The get-option header.
 //
 
 #ifndef GET_OPT_H
@@ -28,7 +28,7 @@ private:
     std::string port_ = "";
 
     // Strings for program name, option and option value.
-    std::string prg_name_, opt_, opt_val_;
+    std::string prgName_, opt_, optVal_;
     
     // Number of input arguments.
     int argc_;
