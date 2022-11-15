@@ -2,8 +2,8 @@
 // Exception class.
 //
 
-#ifndef CPP_SERIAL_EXCEPTIO_H_
-#define CPP_SERIAL_EXCEPTIO_H_
+#ifndef CPP_SERIAL_EXCEPTION_H_
+#define CPP_SERIAL_EXCEPTION_H_
 
 // system include
 #include <iostream>

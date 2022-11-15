@@ -187,7 +187,7 @@ namespace CppSerial {
         std::vector<char> readBuffer_;
         unsigned char readBufferSize_B_;
 
-        static constexpr BaudRate defaultBaudRate_ = BaudRate::B_57600;
+        static constexpr BaudRate defaultBaudRate_ = BaudRate::B_9600;
         static constexpr int32_t defaultTimeout_ms_ = -1;
         static constexpr unsigned char defaultReadBufferSize_B_ = 255;
     };
