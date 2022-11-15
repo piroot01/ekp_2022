@@ -10,6 +10,7 @@
 
 // user headers
 #include "../lib/include/cpp_serial.hpp"
+#include "../include/get_opt.hpp"
 
 #define BUFFER_END 0x0D
 #define SERIAL_INIT "i"
@@ -30,7 +31,7 @@ wait_for_board(SerialPort& Serial, std::string& buffer, time_t& sleep)
 }
 
 int
-main()
+main(int argc, char** argv)
 {
     // Period of checking arduino activity.
     time_t initPer = 100;
@@ -40,6 +41,10 @@ main()
 
     // Read buffer.
     std::string readBuffer;
+
+    GetOpt getOpt(argc, argv);
+
+getOpt.Opt()
 
     // Set the parameters for serial communication.
     SerialPort mySerial("/dev/ttyACM0", BaudRate::B_9600, NumDataBits::EIGHT, Parity::NONE, NumStopBits::ONE);

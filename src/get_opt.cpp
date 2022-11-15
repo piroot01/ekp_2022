@@ -36,7 +36,11 @@ void GetOpt::ShowUsage() {
     std::cerr << help_1_ << prg_name_ << help_2_;
 }
 
-std::string& GetOpt::Opt() {
+std::string& GetOpt::GetPort() {
+    return opt_val_;
+}
+
+void GetOpt::Opt() {
     
     // Option set to help.
     if ((opt_ == option_.help) || (opt_ == option_.Help)) {
@@ -52,7 +56,7 @@ std::string& GetOpt::Opt() {
 
         //Check if number of argumets is 3.
         if (argc_ == PATH_TO_PORT)
-            return opt_val_;
+            GetPort();
         else
             THROW_EXCEPT("Port not specified.");
 
@@ -65,7 +69,4 @@ std::string& GetOpt::Opt() {
         else
             THROW_EXCEPT("Invalid option.");
     }
-
-    // Just for compiler.
-    return null_;
 }

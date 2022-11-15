@@ -16,9 +16,12 @@ public:
 
     // Show usage of the program.
     void ShowUsage();
+    
+    // Determine which option is used.
+    void Opt();
 
     // Return path to port (everything after -p/--port option) or show help message.
-    std::string& Opt();
+    std::string& GetPort();
 private:
 
     // Empty string.
