@@ -14,7 +14,6 @@
 #include "../include/board.hpp"
 
 #define BUFFER_END 0x0D
-#define SERIAL_INIT "i"
 
 using namespace CppSerial;
 
