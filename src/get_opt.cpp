@@ -18,8 +18,8 @@ GetOpt::GetOpt(int& argc, char** argv) {
 
     //Assign individual arguments.
     switch (argc_) {
-        case 3:
-            optVal_ = argv[2];
+//        case 3:
+//            optVal_ = argv[2];
         case 2:
             opt_ = argv[1];
         case 1:
@@ -33,8 +33,9 @@ GetOpt::GetOpt(int& argc, char** argv) {
     }
 }
 
+// Method for printing help message.
 void GetOpt::ShowUsage() {
-    std::cerr << help_1_ << prgName_ << help_2_ << std::endl;
+    std::cerr << help_msg_ << std::endl;
     exit(EXIT_SUCCESS);
 }
 
@@ -42,7 +43,7 @@ std::string& GetOpt::GetPort() {
     return optVal_;
 }
 
-void GetOpt::Opt(std::string& port_) {
+void GetOpt::Opt(/*std::string& port_*/) {
     
     // Option set to help.
     if ((opt_ == option_.help) || (opt_ == option_.Help)) {
@@ -54,21 +55,21 @@ void GetOpt::Opt(std::string& port_) {
             THROW_EXCEPT("Help does not expect additional argumets.");
 
     // Option set to path_to_port.
-    } else if ((opt_ == option_.port) || (opt_ == option_.Port)) {
+//    } else if ((opt_ == option_.port) || (opt_ == option_.Port)) {
 
         //Check if number of argumets is 3.
-        if (argc_ == PATH_TO_PORT)
-            port_ = GetPort();
-        else
-            THROW_EXCEPT("Port not specified.");
+//        if (argc_ == PATH_TO_PORT)
+//            port_ = GetPort();
+//        else
+//            THROW_EXCEPT("Port not specified.");
 
     // If none option is selected print help message.
-    } else {
-        
+//    } else {
+//        
         // Check if number of argumets is 1
-        if (argc_ == NONE)
-            ShowUsage();
-        else
-            THROW_EXCEPT("Invalid option.");
+//        if (argc_ == NONE)
+//            ShowUsage();
+//        else
+//            THROW_EXCEPT("Invalid option.");
     }
 }

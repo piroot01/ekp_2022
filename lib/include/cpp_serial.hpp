@@ -201,6 +201,6 @@ namespace CppSerial {
         static constexpr int32_t defaultTimeout_ms_ = -1;
         static constexpr unsigned char defaultReadBufferSize_B_ = 255;
     };
-}
+};
 
 #endif

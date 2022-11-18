@@ -1,3 +1,7 @@
+//
+// The config reader header.
+//
+
 #ifndef CONFIG_READER_H
 #define CONFIG_READER_H
 
@@ -12,7 +16,7 @@ public:
     static ConfigReader* getInstance();
 
     // Parse the config file.
-    bool parseFile(std::string fileName_);
+    bool parseFile();
 
     // Value in config file could be int or string.
     bool getValue(std::string tag, int& value);
@@ -38,18 +42,18 @@ private:
     static ConfigReader* pInstance_;
 
     // Helper functions.
-    std::string Trim(const std::string& str, const std::string& whiteSpace_);
-    std::string Reduce(const std::string& str, const std::string& fill_, const std::string& whiteSpace_);
+    std::string Trim(const std::string& str);
+    std::string Reduce(const std::string& str);
 
     // Private variables.
     std::string fileName_;
-    std::string whiteSpace_;
-    std::string fill_;
 
     // Default variables.
     const std::string defaultFileName_ = "board.conf";
     const std::string defaultWhiteSpace_ = " \t";
     const std::string defaultFill_ = " ";
+    const std::string defaultDelimeter_ = "=";
+    const std::string defaultComment_ = "#";
 };
 
 #endif

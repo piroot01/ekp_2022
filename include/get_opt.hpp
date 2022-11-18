@@ -18,14 +18,14 @@ public:
     void ShowUsage();
     
     // Determine which option is used.
-    void Opt(std::string& port);
+    void Opt(/*std::string& port*/);
 
     // Return path to port (everything after -p/--port option) or show help message.
     std::string& GetPort();
 private:
 
     // Path to port.
-    std::string port_ = "";
+//    std::string port_ = "";
 
     // Strings for program name, option and option value.
     std::string prgName_, opt_, optVal_;
@@ -37,7 +37,7 @@ private:
     enum option_num_ {
         NONE = 1,
         HELP,
-        PATH_TO_PORT,
+//        PATH_TO_PORT,
     };
 
     // Options
@@ -48,15 +48,14 @@ private:
         std::string Help = "--help";
 
         // For port path.
-        std::string port = "-p";
-        std::string Port = "--port";
+//        std::string port = "-p";
+//        std::string Port = "--port";
     };
     
     struct Option option_;
     
     // Help message.
-    std::string help_1_ = "Usage: ";
-    std::string help_2_ = " <option(s)> PATH_TO_PORT\nOptions:\n-h, --help\t\tShow this help message.\n-p, --port PATH_TO_PORT\tSpecify the path to port.";
+    std::string help_msg_ = "Help message.";
 };
 
 #endif
