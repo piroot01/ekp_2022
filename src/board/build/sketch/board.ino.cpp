@@ -10,9 +10,9 @@ char inputChar;
 bool bufferComplete = false;
 #line 9 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void setup();
-#line 20 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 18 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void loop();
-#line 33 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 31 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void serialEvent();
 #line 9 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 
@@ -20,9 +20,7 @@ void
 setup() 
 {
     // Initialize serial communication.
-    Serial.begin(9600, SERIAL_8N1);
-    pinMode(13, OUTPUT);
-    digitalWrite(13, LOW);
+    Serial.begin(115200, SERIAL_8N1);
     if (Serial)
         Serial.print(SERIAL_READY);
 }

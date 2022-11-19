@@ -10,10 +10,6 @@ $(OUTPUT)/output: $(BUILD)/*.o
 $(BUILD)/serial_port.o: lib/src/serial_port.cpp lib/include/cpp_serial.hpp lib/include/exception.hpp
 	$(COMPILER) -c $< -o $@
 
-# Build get_opt header.
-$(BUILD)/get_opt.o: src/get_opt.cpp include/get_opt.hpp include/exception.hpp
-	$(COMPILER) -c $< -o $@
-
 # Build board header.
 $(BUILD)/board.o: src/board.cpp include/board.hpp
 	$(COMPILER) -c $< -o $@

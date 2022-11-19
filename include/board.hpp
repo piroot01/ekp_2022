@@ -8,6 +8,7 @@
 // system headers
 #include <string>
 #include <unordered_map>
+#include <chrono>
 
 // user headers
 #include "../lib/include/cpp_serial.hpp"
@@ -37,7 +38,6 @@ private:
     // Wait for board to initialize serial communication.
     void WaitForSerialInit(CppSerial::SerialPort& serial);
 
-    // Private read buffer
     std::string readBuffer_;
 
     // Variables that store values from config file.
@@ -51,6 +51,7 @@ private:
 
         std::string initMsg_;
         int updatePer_;
+        int initTimeout_ms_;
     } Config;
 
     // Variables needed by seril library.
@@ -75,6 +76,7 @@ private:
     const int32_t defaultTimeout_ms_ = -1;
     const std::string defaultInitMsg_ = "i";
     const int defaultUpdatePer_ = 50;
+    const int defaultInitTimeout_ms_ = 5000;
 
     // Tag name definitions, that will be look for in config file.
     const std::string deviceTag_ = "path_to_port";
@@ -82,9 +84,10 @@ private:
     const std::string numDataBitsTag_ = "number_of_data_bits";
     const std::string parityTag_ = "parity";
     const std::string numStopBitsTag_ = "number_of_stop_bits";
-    const std::string timeoutTag_ms_ = "timeout";
+    const std::string timeoutTag_ = "timeout";
     const std::string initMsgTag_ = "init_message";
     const std::string updatePerTag_ = "update_period";
+    const std::string initTimeoutTag_ = "init_timeout";
 
     // Adapter map from int to CppSerial::NumDataBits 
     std::unordered_map<int, CppSerial::NumDataBits>

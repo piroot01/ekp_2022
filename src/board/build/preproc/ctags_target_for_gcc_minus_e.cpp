@@ -12,9 +12,7 @@ void
 setup()
 {
     // Initialize serial communication.
-    Serial.begin(9600, 0x06);
-    pinMode(13, 0x1);
-    digitalWrite(13, 0x0);
+    Serial.begin(115200, 0x06);
     if (Serial)
         Serial.print('i');
 }

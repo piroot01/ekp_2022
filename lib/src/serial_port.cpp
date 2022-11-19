@@ -346,9 +346,9 @@ namespace CppSerial {
         if(fileDesc_ == 0) 
             THROW_EXCEPT("Read() was called but file descriptor (fileDesc) was 0, indicating file has not been opened.");
         ssize_t n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
-        if(n < 0) 
+        if (n < 0) 
             throw std::system_error(EFAULT, std::system_category());
-        if(n > 0) 
+        if (n > 0) 
             data = std::string(&readBuffer_[0], n);
     }
 
@@ -357,9 +357,9 @@ namespace CppSerial {
         if(fileDesc_ == 0) 
             THROW_EXCEPT("Read() was called but file descriptor (fileDesc) was 0, indicating file has not been opened.");
         ssize_t n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
-        if(n < 0)
+        if (n < 0)
             throw std::system_error(EFAULT, std::system_category());
-        if(n > 0)
+        if (n > 0)
             copy(readBuffer_.begin(), readBuffer_.begin() + n, back_inserter(data));
     }
 

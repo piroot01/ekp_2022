@@ -11,9 +11,7 @@ void
 setup() 
 {
     // Initialize serial communication.
-    Serial.begin(9600, SERIAL_8N1);
-    pinMode(13, OUTPUT);
-    digitalWrite(13, LOW);
+    Serial.begin(115200, SERIAL_8N1);
     if (Serial)
         Serial.print(SERIAL_READY);
 }

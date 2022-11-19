@@ -3,6 +3,7 @@
 //
 
 // system headers
+#include <bits/chrono.h>
 #include <string>
 #include <thread>
 #include <chrono>
@@ -26,9 +27,10 @@ Board::Board() {
     pconf->getValue(numDataBitsTag_, boardConfig.numDataBits_);
     pconf->getValue(parityTag_, boardConfig.parity_);
     pconf->getValue(numStopBitsTag_, boardConfig.numStopBits_);
-    pconf->getValue(timeoutTag_ms_, boardConfig.timeout_ms_);
+    pconf->getValue(timeoutTag_, boardConfig.timeout_ms_);
     pconf->getValue(initMsgTag_, boardConfig.initMsg_);
     pconf->getValue(updatePerTag_, boardConfig.updatePer_);
+    pconf->getValue(initTimeoutTag_, boardConfig.initTimeout_ms_);
 
     // If some option in config file is set wrongly or not at all, use default values.
     if (boardConfig.device_.empty())
@@ -65,6 +67,9 @@ Board::Board() {
     if (boardConfig.updatePer_ == 0)
         boardConfig.updatePer_ = defaultUpdatePer_;
 
+    if (boardConfig.initTimeout_ms_ == 0)
+        boardConfig.initTimeout_ms_ = defaultInitTimeout_ms_;
+
     // Set serial port accordingly.
     serial.SetDevice(boardConfig.device_);
 
@@ -81,32 +86,40 @@ Board::Board() {
 
 // Method for opening the serial port.
 void Board::Open() {
-    // Remove any data from both receive and transmitter buffer.
-    serial.FlushSerialBuff();
-    
+
     // Open the serial port.
     serial.Open();
 
+    // Remove any data from both receive and transmitter buffer.
+    serial.FlushSerialBuff();
+    
     // Before any communication wait for boards serial interface to start up.
     WaitForSerialInit(serial);
 }
 
 // Wait for board to inicialize serial communication.
 void Board::WaitForSerialInit(CppSerial::SerialPort& serial) {
-    while (1) {
-        
-        // Read serial buffer.
-        serial.Read(readBuffer_);
+    auto start = std::chrono::steady_clock::now();
 
+    while (std::chrono::steady_clock::now() < start + std::chrono::milliseconds(boardConfig.initTimeout_ms_)) {
+    
+        // Read serial buffer.
+        if (serial.Available() > 0)
+            serial.Read(readBuffer_);
+        
         // Check if board is inicialized.
         if (readBuffer_.compare(boardConfig.initMsg_) == 0) {
-            break;
+            return;
         } else {
-
+            
             // Sleep for sleep time.
-            std::this_thread::sleep_for(std::chrono::milliseconds(boardConfig.updatePer_));
+                std::this_thread::sleep_for(std::chrono::milliseconds(boardConfig.updatePer_));
         }
     }
+    
+    // If the message is not received within initTimeout_ms_ period.
+    THROW_EXCEPT("Init timeout - serial communication could not be inicialized!");
+    return;
 }
 
 // Adapter from int to CppSerial::NumDataBits
