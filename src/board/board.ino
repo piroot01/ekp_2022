@@ -2,10 +2,12 @@
 // board.ino
 //
 
-#define SERIAL_READY 'i'
+#include "app.hpp"
 
-char inputChar;
+char tmpChar;
 bool bufferComplete = false;
+
+_Serial mySerial;
 
 void
 setup() 
@@ -13,7 +15,7 @@ setup()
     // Initialize serial communication.
     Serial.begin(115200, SERIAL_8N1);
     if (Serial)
-        Serial.print(SERIAL_READY);
+        Serial.print((char)mySerial.GetSerialReadyChar());
 }
 
 void
@@ -23,7 +25,7 @@ loop()
     if (bufferComplete) {
 
         // Printed only if the correct char is received.
-        if (inputChar == 'h') Serial.print('a');
+        mySerial.Hello();
 
         bufferComplete = false;
     }
@@ -35,9 +37,9 @@ serialEvent()
     while (Serial.available()) {
         
         // Store one byte from buffer.
-        char tmpChar = (char)Serial.read();
+        tmpChar = (char)Serial.read();
 
         if (tmpChar == '\r') bufferComplete = true;
-        else inputChar = tmpChar;
+        else mySerial.StoreChar(tmpChar);
     }
 }
