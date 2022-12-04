@@ -14,7 +14,7 @@ _Serial mySerial;
 void setup();
 #line 20 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void loop();
-#line 33 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 34 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void serialEvent();
 #line 11 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 
@@ -24,7 +24,7 @@ setup()
     // Initialize serial communication.
     Serial.begin(115200, SERIAL_8N1);
     if (Serial)
-        Serial.print((char)mySerial.GetSerialReadyChar());
+        Serial.print(mySerial.GetSerialReadyChar());
 }
 
 void
@@ -34,7 +34,8 @@ loop()
     if (bufferComplete) {
 
         // Printed only if the correct char is received.
-        mySerial.Hello();
+        if (mySerial.GetStoredChar() == 'h')
+            mySerial.SendPi();
 
         bufferComplete = false;
     }

@@ -15,7 +15,7 @@ setup()
     // Initialize serial communication.
     Serial.begin(115200, SERIAL_8N1);
     if (Serial)
-        Serial.print((char)mySerial.GetSerialReadyChar());
+        Serial.print(mySerial.GetSerialReadyChar());
 }
 
 void
@@ -25,7 +25,8 @@ loop()
     if (bufferComplete) {
 
         // Printed only if the correct char is received.
-        mySerial.Hello();
+        if (mySerial.GetStoredChar() == 'h')
+            mySerial.SendPi();
 
         bufferComplete = false;
     }

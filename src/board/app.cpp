@@ -20,6 +20,9 @@ char& _Serial::GetStoredChar() {
 }
 
 void _Serial::Hello() {
-    if (GetStoredChar() == 'h')
-        Serial.print('h');
+    Serial.print('h');
+}
+
+void _Serial::SendPi() {
+    Serial.print(pi_, 5);
 }

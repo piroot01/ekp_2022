@@ -18,7 +18,7 @@
 using namespace CppSerial;
 
 int
-main(int argc, char** argv)
+main()
 {
     // Message to write to serial port.
     char myMessage[2] = {'h', BUFFER_END};
@@ -30,13 +30,12 @@ main(int argc, char** argv)
 
     myBoard.Open();
 
-    // Send my message.
     myBoard.serial.Write(myMessage);
 
-    // Read the answer.
     myBoard.serial.Read(readBuffer);
+    
+    double pi = std::stod(readBuffer);
 
-    // Print readBuffer on screen.
     std::cout << readBuffer << std::endl;
 
     // Close serial port.
