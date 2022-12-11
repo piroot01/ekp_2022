@@ -5,6 +5,7 @@
 // system headers
 #include <iostream>
 #include <chrono>
+#include <ratio>
 #include <thread>
 #include <string>
 
@@ -26,17 +27,21 @@ main()
     // Read buffer.
     std::string readBuffer;
 
+    std::string nums[100];
+
     Board myBoard;
 
     myBoard.Open();
 
     myBoard.serial.Write(myMessage);
 
-    myBoard.serial.Read(readBuffer);
-    
-    double pi = std::stod(readBuffer);
-
-    std::cout << readBuffer << std::endl;
+    int i = 0;
+    while (true) {
+        std::cout << myBoard.serial.Available() << '\n';
+        if (myBoard.serial.Available() >= 10)
+            myBoard.serial.Read(readBuffer);
+        std::this_thread::sleep_for(std::chrono::microseconds(10000));
+    }
 
     // Close serial port.
     myBoard.serial.Close();

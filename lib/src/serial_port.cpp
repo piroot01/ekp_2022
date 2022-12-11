@@ -324,9 +324,12 @@ namespace CppSerial {
     void SerialPort::Write(const std::string& data) {
         if (state_ != State::OPEN) 
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
+        
         if (fileDesc_ < 0) 
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but file descriptor < 0, indicating file has not been opened.");
+        
         int writeResult = write(fileDesc_, data.c_str(), data.size());
+        
         if (writeResult == -1) 
             throw std::system_error(EFAULT, std::system_category());
     }
@@ -334,31 +337,41 @@ namespace CppSerial {
     void SerialPort::WriteBinary(const std::vector<uint8_t>& data) {
         if(state_ != State::OPEN) 
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
-        if(fileDesc_ < 0) 
+        
+        if(fileDesc_ < 0)
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but file descriptor < 0, indicating file has not been opened.");
+        
         int writeResult = write(fileDesc_, data.data(), data.size());
+        
         if (writeResult == -1) 
             throw std::system_error(EFAULT, std::system_category());
     }
 
     void SerialPort::Read(std::string& data) {
         data.clear();
+        
         if(fileDesc_ == 0) 
             THROW_EXCEPT("Read() was called but file descriptor (fileDesc) was 0, indicating file has not been opened.");
+        
         ssize_t n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
+        
         if (n < 0) 
             throw std::system_error(EFAULT, std::system_category());
+        
         if (n > 0) 
             data = std::string(&readBuffer_[0], n);
     }
 
 	void SerialPort::ReadBinary(std::vector<uint8_t>& data) {
         data.clear();
+        
         if(fileDesc_ == 0) 
             THROW_EXCEPT("Read() was called but file descriptor (fileDesc) was 0, indicating file has not been opened.");
         ssize_t n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
+        
         if (n < 0)
             throw std::system_error(EFAULT, std::system_category());
+        
         if (n > 0)
             copy(readBuffer_.begin(), readBuffer_.begin() + n, back_inserter(data));
     }
@@ -366,6 +379,7 @@ namespace CppSerial {
     termios2 SerialPort::GetTermios2() {
         struct termios2 term2;
         ioctl(fileDesc_, TCGETS2, &term2);
+        
         return term2;
     }
 
@@ -379,26 +393,34 @@ namespace CppSerial {
             if(retVal != 0) THROW_EXCEPT("Tried to close serial port " + device_ + ", but close() failed.");
             fileDesc_ = -1;
         }
+        
         state_ = State::CLOSED;
     }
 
     void SerialPort::SetTimeout(int32_t timeout_ms) {
         if (timeout_ms < -1)
             THROW_EXCEPT(std::string() + "timeout_ms provided to " + __PRETTY_FUNCTION__ + " was < -1, which is invalid.");
+        
         if(timeout_ms > 25500)
             THROW_EXCEPT(std::string() + "timeout_ms provided to " + __PRETTY_FUNCTION__ + " was > 25500, which is invalid.");
+        
         if(state_ == State::OPEN)
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called while state == OPEN.");
+        
         timeout_ms_ = timeout_ms;
     }
 
     int32_t SerialPort::Available() {
 		if(state_ != State::OPEN)
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
+
         int32_t ret = 0;
         ioctl(fileDesc_, FIONREAD, &ret);
+        
         return ret;
     }
+
+
 
     State SerialPort::GetState() {
         return state_;
