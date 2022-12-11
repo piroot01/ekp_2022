@@ -34,14 +34,14 @@ main()
     myBoard.Open();
 
     myBoard.serial.Write(myMessage);
+   
+    int len = 100;
 
-    int i = 0;
-    while (true) {
-        std::cout << myBoard.serial.Available() << '\n';
-        if (myBoard.serial.Available() >= 10)
-            myBoard.serial.Read(readBuffer);
-        std::this_thread::sleep_for(std::chrono::microseconds(10000));
-    }
+    myBoard.serial.Read(readBuffer);
+
+    //myBoard.ReadUntil(readBuffer, len);
+
+    std::cout << readBuffer << '\n';
 
     // Close serial port.
     myBoard.serial.Close();

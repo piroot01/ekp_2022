@@ -29,8 +29,10 @@ Board::Board() {
     pconf->getValue(numStopBitsTag_, boardConfig.numStopBits_);
     pconf->getValue(timeoutTag_, boardConfig.timeout_ms_);
     pconf->getValue(initMsgTag_, boardConfig.initMsg_);
-    pconf->getValue(updatePerTag_, boardConfig.updatePer_);
+    pconf->getValue(initUpdatePerTag_, boardConfig.initUpdatePer_ms_);
     pconf->getValue(initTimeoutTag_, boardConfig.initTimeout_ms_);
+    pconf->getValue(readBuffSizeTag_, boardConfig.readBuffSize_);
+    pconf->getValue(readUpdatePerTag_, boardConfig.readUpdatePer_us_);
 
     // If some option in config file is set wrongly or not at all, use default values.
     if (boardConfig.device_.empty())
@@ -64,11 +66,17 @@ Board::Board() {
     if (boardConfig.initMsg_.empty())
         boardConfig.initMsg_ = defaultInitMsg_;
 
-    if (boardConfig.updatePer_ == 0)
-        boardConfig.updatePer_ = defaultUpdatePer_;
+    if (boardConfig.initUpdatePer_ms_ == 0)
+        boardConfig.initUpdatePer_ms_ = defaultInitUpdatePer_ms_;
 
     if (boardConfig.initTimeout_ms_ == 0)
         boardConfig.initTimeout_ms_ = defaultInitTimeout_ms_;
+
+    if (boardConfig.readBuffSize_ == 0)
+        boardConfig.readBuffSize_ = defaultReadBuffSize_;
+
+    if (boardConfig.readUpdatePer_us_ == 0)
+        boardConfig.readUpdatePer_us_ = defaultReadUpdatePer_us_;
 
     // Set serial port accordingly.
     serial.SetDevice(boardConfig.device_);
@@ -97,8 +105,48 @@ void Board::Open() {
     WaitForSerialInit(serial);
 }
 
+void Board::ReadUntil(std::string& data) {
+    data.clear();
+
+    if(serial.GetState() != CppSerial::State::OPEN)
+            THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
+
+    while (true) {
+
+        // If serial buffer contains as many as readBuffSize_ chars;
+        if (serial.Available() >= boardConfig.readBuffSize_) {
+            serial.Read(data);
+            return;
+        }
+
+        std::this_thread::sleep_for(std::chrono::microseconds(boardConfig.readUpdatePer_us_));
+    }
+}
+
+void Board::ReadUntil(std::string& data, int& limit) {
+    data.clear();
+
+    if(serial.GetState() != CppSerial::State::OPEN)
+            THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
+
+    while (true) {
+
+        // If serial buffer contains as many as readBuffSize_ chars;
+        if (serial.Available() >= limit) {
+            serial.Read(data);
+            return;
+        }
+
+        std::this_thread::sleep_for(std::chrono::microseconds(boardConfig.readUpdatePer_us_));
+    }
+}
+
+
 // Wait for board to inicialize serial communication.
 void Board::WaitForSerialInit(CppSerial::SerialPort& serial) {
+    if(serial.GetState() != CppSerial::State::OPEN)
+        THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
+
     auto start = std::chrono::steady_clock::now();
 
     while (std::chrono::steady_clock::now() < start + std::chrono::milliseconds(boardConfig.initTimeout_ms_)) {
@@ -113,7 +161,7 @@ void Board::WaitForSerialInit(CppSerial::SerialPort& serial) {
         } else {
             
             // Sleep for sleep time.
-                std::this_thread::sleep_for(std::chrono::milliseconds(boardConfig.updatePer_));
+                std::this_thread::sleep_for(std::chrono::milliseconds(boardConfig.initUpdatePer_ms_));
         }
     }
     

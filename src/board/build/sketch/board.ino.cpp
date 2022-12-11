@@ -18,7 +18,7 @@ _Serial mySerial;
 void setup();
 #line 24 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void loop();
-#line 41 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
+#line 48 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 void serialEvent();
 #line 15 "/home/tomas/Documents/tomas/git/ekp_2022/src/board/board.ino"
 
@@ -34,18 +34,25 @@ setup()
 void
 loop() 
 {
+    if (i == 0 && bufferComplete) {
+        //Serial.print('3');
+        i++;
+    }
+
     // Check if the buffer is complete.
+    /*
     if (bufferComplete) {
         while (i <= 100) {
             if (micros() - prevTime >= interval) {
                 prevTime = micros();
-                Serial.print(1);
+                Serial.print(3);
                 i++;
             }
             if (i == 100)
                 bufferComplete = false;
         }
     }
+    */
 }
 
 void

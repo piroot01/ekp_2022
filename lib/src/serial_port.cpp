@@ -355,7 +355,7 @@ namespace CppSerial {
         
         ssize_t n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
         
-        if (n < 0) 
+        if (n <= 0) 
             throw std::system_error(EFAULT, std::system_category());
         
         if (n > 0) 

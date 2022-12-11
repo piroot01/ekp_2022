@@ -15,14 +15,18 @@
 
 class Board {
 public:
-    
+
     // Create public 
     CppSerial::SerialPort serial;
-    
+
     // Default constructor.
     Board();
 
     void Open();
+
+    void ReadUntil(std::string& data);
+
+    void ReadUntil(std::string& data, int& limit);
 
 private:
 
@@ -50,8 +54,11 @@ private:
         int timeout_ms_;
 
         std::string initMsg_;
-        int updatePer_;
+        int initUpdatePer_ms_;
         int initTimeout_ms_;
+
+        int readBuffSize_;
+        int readUpdatePer_us_;
     } Config;
 
     // Variables needed by seril library.
@@ -75,8 +82,10 @@ private:
     const CppSerial::NumStopBits defaultNumStopBits_ = CppSerial::NumStopBits::ONE;
     const int32_t defaultTimeout_ms_ = -1;
     const std::string defaultInitMsg_ = "i";
-    const int defaultUpdatePer_ = 50;
+    const int defaultInitUpdatePer_ms_ = 50;
     const int defaultInitTimeout_ms_ = 5000;
+    const int defaultReadBuffSize_ = 64;
+    const int defaultReadUpdatePer_us_ = 1000;
 
     // Tag name definitions, that will be look for in config file.
     const std::string deviceTag_ = "path_to_port";
@@ -86,8 +95,10 @@ private:
     const std::string numStopBitsTag_ = "number_of_stop_bits";
     const std::string timeoutTag_ = "timeout";
     const std::string initMsgTag_ = "init_message";
-    const std::string updatePerTag_ = "update_period";
+    const std::string initUpdatePerTag_ = "init_update_period";
     const std::string initTimeoutTag_ = "init_timeout";
+    const std::string readBuffSizeTag_ = "read_buffer_size";
+    const std::string readUpdatePerTag_ = "read_update_period";
 
     // Adapter map from int to CppSerial::NumDataBits 
     std::unordered_map<int, CppSerial::NumDataBits>
