@@ -152,6 +152,10 @@ namespace CppSerial {
         // It returns the state of the serial port.
         State GetState();
 
+        // Use to get the timeout of serial communication.
+        // It returns timeout in milliseconds.
+        int32_t GetTimeout();
+
     private:
 
         // Configures the tty device as a serial port.

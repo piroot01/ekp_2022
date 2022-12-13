@@ -33,6 +33,7 @@ Board::Board() {
     pconf->getValue(initTimeoutTag_, boardConfig.initTimeout_ms_);
     pconf->getValue(readBuffSizeTag_, boardConfig.readBuffSize_);
     pconf->getValue(readUpdatePerTag_, boardConfig.readUpdatePer_us_);
+    pconf->getValue(readBuffTimeoutTag_, boardConfig.readBuffTimeout_ms_);
 
     // If some option in config file is set wrongly or not at all, use default values.
     if (boardConfig.device_.empty())
@@ -78,6 +79,9 @@ Board::Board() {
     if (boardConfig.readUpdatePer_us_ == 0)
         boardConfig.readUpdatePer_us_ = defaultReadUpdatePer_us_;
 
+    if (boardConfig.readBuffTimeout_ms_ == 0)
+        boardConfig.readBuffTimeout_ms_ = defaultReadBuffTimeout_ms_;
+
     // Set serial port accordingly.
     serial.SetDevice(boardConfig.device_);
 
@@ -107,11 +111,12 @@ void Board::Open() {
 
 void Board::ReadUntil(std::string& data) {
     data.clear();
+    auto start = std::chrono::steady_clock::now();
 
     if(serial.GetState() != CppSerial::State::OPEN)
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
 
-    while (true) {
+    while (std::chrono::steady_clock::now() <= start + std::chrono::milliseconds(boardConfig.readBuffTimeout_ms_)) {
 
         // If serial buffer contains as many as readBuffSize_ chars;
         if (serial.Available() >= boardConfig.readBuffSize_) {
@@ -121,10 +126,15 @@ void Board::ReadUntil(std::string& data) {
 
         std::this_thread::sleep_for(std::chrono::microseconds(boardConfig.readUpdatePer_us_));
     }
+
+    // If the message is not received within initTimeout_ms_ period.
+    THROW_EXCEPT("Serial board did not fill the input buffer within timeout!");
+    return;
 }
 
 void Board::ReadUntil(std::string& data, int& limit) {
     data.clear();
+    //auto start = std::chrono::steady_clock::now();
 
     if(serial.GetState() != CppSerial::State::OPEN)
             THROW_EXCEPT(std::string() + __PRETTY_FUNCTION__ + " called but state != OPEN. Please call Open() first.");
@@ -139,6 +149,11 @@ void Board::ReadUntil(std::string& data, int& limit) {
 
         std::this_thread::sleep_for(std::chrono::microseconds(boardConfig.readUpdatePer_us_));
     }
+
+    // If the message is not received within initTimeout_ms_ period.
+    THROW_EXCEPT("Serial board did not fill the input buffer within timeout!");
+    return;
+
 }
 
 
@@ -149,7 +164,7 @@ void Board::WaitForSerialInit(CppSerial::SerialPort& serial) {
 
     auto start = std::chrono::steady_clock::now();
 
-    while (std::chrono::steady_clock::now() < start + std::chrono::milliseconds(boardConfig.initTimeout_ms_)) {
+    while (std::chrono::steady_clock::now() <= start + std::chrono::milliseconds(boardConfig.initTimeout_ms_)) {
     
         // Read serial buffer.
         if (serial.Available() > 0)

@@ -59,6 +59,7 @@ private:
 
         int readBuffSize_;
         int readUpdatePer_us_;
+        int readBuffTimeout_ms_;
     } Config;
 
     // Variables needed by seril library.
@@ -86,6 +87,7 @@ private:
     const int defaultInitTimeout_ms_ = 5000;
     const int defaultReadBuffSize_ = 64;
     const int defaultReadUpdatePer_us_ = 1000;
+    const int defaultReadBuffTimeout_ms_ = 200;
 
     // Tag name definitions, that will be look for in config file.
     const std::string deviceTag_ = "path_to_port";
@@ -99,6 +101,7 @@ private:
     const std::string initTimeoutTag_ = "init_timeout";
     const std::string readBuffSizeTag_ = "read_buffer_size";
     const std::string readUpdatePerTag_ = "read_update_period";
+    const std::string readBuffTimeoutTag_ = "read_buffer_timeout";
 
     // Adapter map from int to CppSerial::NumDataBits 
     std::unordered_map<int, CppSerial::NumDataBits>

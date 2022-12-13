@@ -1,4 +1,4 @@
-COMPILER=g++
+COMPILER=clang++ -Wall
 BUILD=build
 OUTPUT=out
 

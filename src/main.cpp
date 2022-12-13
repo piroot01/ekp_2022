@@ -34,14 +34,11 @@ main()
     myBoard.Open();
 
     myBoard.serial.Write(myMessage);
-   
-    int len = 100;
 
-    myBoard.serial.Read(readBuffer);
-
-    //myBoard.ReadUntil(readBuffer, len);
-
-    std::cout << readBuffer << '\n';
+    for (int i = 0; i < 10; i++) {
+        myBoard.ReadUntil(readBuffer);
+        std::cout << "[" << i << "]: " << readBuffer << '\n';
+    }
 
     // Close serial port.
     myBoard.serial.Close();

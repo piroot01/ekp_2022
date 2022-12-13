@@ -274,36 +274,53 @@ namespace CppSerial {
         }
 
         //.c_oflag
+        // Prevent special interpretation of output bytes (e.g. newline chars)
         tty.c_oflag     =   0;
         tty.c_oflag     &=  ~OPOST;
 
         // .c_cc[]
         if (timeout_ms_ == -1) {
+
+            // read is blocked until 1 byte is available
             tty.c_cc[VTIME] = 0;
             tty.c_cc[VMIN] = 1;
         } else if (timeout_ms_ == 0) {
+
+            // read immediately from rx buffer
             tty.c_cc[VTIME] = 0;
             tty.c_cc[VMIN] = 0;
         } else if (timeout_ms_ > 0) {
+
+            // read with timeout
             tty.c_cc[VTIME] = (cc_t)(timeout_ms_/100);
             tty.c_cc[VMIN] = 0;
         }
 
         // .c_iflag
+        // disable software flow control
         tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+
+        // disable any special handling of received bytes
         tty.c_iflag &= ~(IGNBRK|BRKINT|PARMRK|ISTRIP|INLCR|IGNCR|ICRNL);
 
-        // .c_lflag) 
+        // .c_lflag)
+        // disable canonical mode
         tty.c_lflag	&= ~ICANON;
 
+        // disable or enable echo
         if (echo_) {
             tty.c_lflag |= ECHO;
         } else {
             tty.c_lflag &= ~(ECHO);
         }
 
+        // disable erasure
         tty.c_lflag	&= ~ECHOE;
+
+        // disable new-line echo
         tty.c_lflag	&= ~ECHONL;
+
+        // disable interpretation of INTR, QUIT and SUSP
         tty.c_lflag	&= ~ISIG;
 		
         this->SetTermios2(tty);
@@ -353,9 +370,11 @@ namespace CppSerial {
         if(fileDesc_ == 0) 
             THROW_EXCEPT("Read() was called but file descriptor (fileDesc) was 0, indicating file has not been opened.");
         
-        ssize_t n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
+        ssize_t n;
         
-        if (n <= 0) 
+        n = read(fileDesc_, &readBuffer_[0], readBufferSize_B_);
+        
+        if (n < 0) 
             throw std::system_error(EFAULT, std::system_category());
         
         if (n > 0) 
@@ -385,6 +404,7 @@ namespace CppSerial {
 
     void SerialPort::SetTermios2(termios2 tty) {
         ioctl(fileDesc_, TCSETS2, &tty);
+        //tcsetattr(fileDesc_, TCSANOW, &tty);
     }
     
     void SerialPort::Close() {
@@ -420,9 +440,11 @@ namespace CppSerial {
         return ret;
     }
 
-
-
     State SerialPort::GetState() {
         return state_;
+    }
+
+    int32_t SerialPort::GetTimeout() {
+        return timeout_ms_;
     }
 }
