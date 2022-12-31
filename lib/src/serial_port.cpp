@@ -326,15 +326,15 @@ namespace CppSerial {
         this->SetTermios2(tty);
 	}
 
-    void SerialPort::FlushRecv() {
+    void SerialPort::FlushReceiverBufer() {
         ioctl(fileDesc_, TCFLSH, 0);
     }
 
-    void SerialPort::FlushTran() {
+    void SerialPort::FlushTransmitterBuffer() {
         ioctl(fileDesc_, TCFLSH, 1);
     }
 
-    void SerialPort::FlushSerialBuff() {
+    void SerialPort::FlushSerialBuffers() {
         ioctl(fileDesc_, TCFLSH, 2);
     }
 

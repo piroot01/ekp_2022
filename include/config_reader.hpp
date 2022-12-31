@@ -21,6 +21,7 @@ public:
     // Value in config file could be int or string.
     bool getValue(std::string tag, int& value);
     bool getValue(std::string tag, std::string& value);
+
 private:
 
     // Default constructor.

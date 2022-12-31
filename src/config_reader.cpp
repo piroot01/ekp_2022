@@ -88,13 +88,15 @@ bool ConfigReader::parseFile()
         size_t found = line.find_first_of(defaultComment_);
         std::string configData = line.substr(0, found);
 
-        // Remove ^M from config file.
-        configData.erase(std::remove(configData.begin(), configData.end(), '\r'), configData.end());
-
+        // Remove \r from config file.
+        // Erase–remove idiom
+        //configData.erase(std::remove(configData.begin(), configData.end(), '\r'), configData.end());
+        
+        // If the defaultComment_ sign was not found, skip.
         if (configData.empty())
             continue;
 
-        unsigned int len = configData.find(defaultDelimeter_);
+        std::size_t len = configData.find(defaultDelimeter_);
 
         std::string tag, value;
 
