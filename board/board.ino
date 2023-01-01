@@ -1,28 +1,51 @@
 // Code for testing the communication initialization.
 
 #define CR '\r'
+#define FF '\f'
 
 const char init_ = 'i';
 unsigned long prevTime_ms;
-const unsigned int period_ms = 1;
-bool readyToSend = false;
-float count;
+const unsigned int period_ms = 10;
+float randomNumber;
 
 void setup() {
-    Serial.begin(115200, SERIAL_8N1);
+    Serial.begin(9600, SERIAL_8N1);
+    randomSeed(analogRead(0));
     if (Serial) {
         Serial.print(init_);
-        count = 3.1415926585;
         delay(100);
-
     }
 }
 
 void loop() {
     if (millis() - prevTime_ms >= period_ms) {
         prevTime_ms = millis();
-        Serial.print(count, 5);
+
         Serial.print(CR);
-        count += 2.7182;
+        Serial.print(micros() / 1000000.0, 10);
+
+        randomNumber = random(1, 10) / 31.0;
+        Serial.print(FF);
+        Serial.print(randomNumber, 6);
+
+        randomNumber = random(1, 10) / 31.0;
+        Serial.print(FF);
+        Serial.print(randomNumber, 6);
+
+        randomNumber = random(1, 10) / 31.0;
+        Serial.print(FF);
+        Serial.print(randomNumber, 6);
+
+        randomNumber = random(1, 10) / 31.0;
+        Serial.print(FF);
+        Serial.print(randomNumber, 6);
+
+        randomNumber = random(1, 10) / 31.0;
+        Serial.print(FF);
+        Serial.print(randomNumber, 6);
+
+        randomNumber = random(1, 10) / 31.0;
+        Serial.print(FF);
+        Serial.print(randomNumber, 6);
     }
 }

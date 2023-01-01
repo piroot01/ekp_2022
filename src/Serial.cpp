@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Serial.cpp
-//  Description: _Serial class
+//  Description: _Serial class.
 //  Author: Tomas Machacek
 //  Date: 25 Dec 2022
 //  Notes: N/A

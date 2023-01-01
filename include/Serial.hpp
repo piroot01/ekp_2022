@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Serial.hpp
-//  Description: Definition of Serial class
+//  Description: Definition of Serial class.
 //  Author: Tomas Machacek
 //  Date: 24 Dec 2022
 //  Notes: N/A

@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Board.cpp
-//  Description: Board class
+//  Description: Board class.
 //  Author: Tomas Machacek
 //  Date: 31 Dec 2022
 //  Notes: N/A
@@ -17,6 +17,7 @@
 #include "ConfigReader.hpp"
 #include "Exception.hpp"
 #include "ConfigReader.tcc"
+#include "Status.hpp"
 
 Board* Board::pInstance_ = nullptr;
 
@@ -46,7 +47,8 @@ Board::Board() {
     pConf->SaveDefaultTagValue(optionTags_.initTimeout, optionDefaultValues_.initTimeout_ms);
 
     // Parse whole config
-    pConf->ParseConfig();
+    if (pConf->ParseConfig())
+        STATUS("Parsing of the config.", Level::INFO);
 
     // Configure the serial accordingly.
     serial.SetDevice(pConf->GetValue<std::string>(optionTags_.device));
@@ -64,6 +66,7 @@ Board::Board() {
 
 void Board::Open() {
     serial.Open();
+    STATUS("Serial port was opened.", Level::INFO);
     serial.FlushSerialBuffers();
     SerialInit();
 }
@@ -85,6 +88,9 @@ void Board::SerialInit() {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
 
-    if (!initSuccessful)
+    if (!initSuccessful) {
         THROW_EXCEPT("Initialization failed - timeout.");
+    } else {
+        STATUS("Communication between board and pc was initiated.", Level::INFO);
+    }
 }

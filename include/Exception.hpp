@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Exception.hpp
-//  Description: Definition of Exception class
+//  Description: Definition of Exception class.
 //  Author: Tomas Machacek
 //  Date: 13 Dec 2022
 //  Notes: File originally from

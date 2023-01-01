@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: FastAtoi.cpp
-//  Description: FastAtoi class
+//  Description: FastAtoi class.
 //  Author: Tomas Machacek
 //  Date: 13 Dec 2022
 //  Notes: N/A

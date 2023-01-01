@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Board.hpp
-//  Title: Definition of Board class
+//  Title: Definition of Board class.
 //  Author: Machacek Tomas
 //  Date: 31 Dec 2022
 //  Notes: Class is implementing singleton pattern.
@@ -33,7 +33,6 @@ public:
 
     // Method for initialization of the board-pc communication.
     void Open();
-
 
 private:
 

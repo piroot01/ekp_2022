@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Config_reader.tcc
-//  Title: Definition of ConfigReader templated methods
+//  Title: Definition of ConfigReader templated methods.
 //  Author: Machacek Tomas
 //  Date: 14 Dec 2022
 //  Notes: Class ConfigReader uses singleton pattern.

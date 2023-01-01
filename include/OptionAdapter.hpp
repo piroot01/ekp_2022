@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: OptionAdapter.hpp
-//  Description: Definition of OptionAdapter class
+//  Description: Definition of OptionAdapter class.
 //  Author: Tomas Machacek
 //  Date: 13 Dec 2022
 //  Notes: N/A

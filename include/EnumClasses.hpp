@@ -1,10 +1,10 @@
 //==================================================================
 //  
 //  File: EnumClasses.hpp
-//  Description: Definition of enum classes
+//  Description: Definition of enum classes.
 //  Author: Tomas Machacek
 //  Date: 13 Dec 2022
-//  Notes: They are for Serial and OptionAdaptr
+//  Notes: They are for _Serial and OptionAdapter.
 //
 //==================================================================
 

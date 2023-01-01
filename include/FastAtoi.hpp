@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: FastAtoi.hpp
-//  Description: Definition of FastAtoi class
+//  Description: Definition of FastAtoi class.
 //  Author: Tomas Machacek
 //  Date: 13 Dec 2022
 //  Notes: N/A

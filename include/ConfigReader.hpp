@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: Config_reader.hpp
-//  Title: Definition of ConfigReader class
+//  Title: Definition of ConfigReader class.
 //  Author: Machacek Tomas
 //  Date: 14 Dec 2022
 //  Notes: Class ConfigReader uses singleton pattern.

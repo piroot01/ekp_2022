@@ -4,12 +4,13 @@
 #include "Board.hpp"
 
 #define CR '\r'
+#define FF '\f'
 
 int main() {
     Board* pBoard = Board::GetInstance();
 
     pBoard->Open();
-
+    
     pBoard->serial.FlushSerialBuffers();
 
     char data;
@@ -17,14 +18,21 @@ int main() {
     std::vector<std::string> readBuffer;
     std::string tmpBuffer;
 
-    while (i < 100) {
+    while (i < 11) {
         pBoard->serial.Read(data);
-        if (data != CR) {
-            tmpBuffer.push_back(data);
-        } else {
-            readBuffer.push_back(tmpBuffer);
-            tmpBuffer.clear();
+
+        if (data == CR) {
+            if (i != 0) {
+                readBuffer.push_back(tmpBuffer);
+                tmpBuffer.clear();
+            }
             i++;
+        } else {
+            if (data == FF) {
+                tmpBuffer.push_back(',');
+            } else {
+                tmpBuffer.push_back(data);
+            }
         }
     }
     

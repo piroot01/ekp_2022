@@ -1,7 +1,7 @@
 //==================================================================
 //  
 //  File: OptionAdapter.cpp
-//  Description: OptionAdapter class
+//  Description: OptionAdapter class.
 //  Author: Tomas Machacek
 //  Date: 13 Dec 2022
 //  Notes: N/A
