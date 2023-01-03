@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -O2 -pedantic -Wall -Werror
+CFLAGS = -std=c++20 -O2 -pedantic -Wall -Werror
 CFLAGS += -I./include
 
 SOURCES = src/FastAtoi.cpp src/ConfigReader.cpp src/OptionAdapter.cpp src/Serial.cpp src/Board.cpp src/main.cpp

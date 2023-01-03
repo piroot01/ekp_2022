@@ -45,6 +45,7 @@ Board::Board() {
     pConf->SaveDefaultTagValue(optionTags_.parity, optionDefaultValues_.parity);
     pConf->SaveDefaultTagValue(optionTags_.numStopBits, optionDefaultValues_.numStopBits);
     pConf->SaveDefaultTagValue(optionTags_.initTimeout, optionDefaultValues_.initTimeout_ms);
+    pConf->SaveDefaultTagValue(optionTags_.sampleTime, optionDefaultValues_.sampleTime_s);
 
     // Parse whole config
     if (pConf->ParseConfig())
@@ -59,6 +60,7 @@ Board::Board() {
 
     // Other options.
     optionValues_.initTimeout_ms = pConf->GetValue<int>(optionTags_.initTimeout);
+    optionValues_.sampleTime_s = pConf->GetValue<int>(optionTags_.sampleTime);
 
     // Release the pConf.
     pConf->ReleaseInstance();
@@ -69,6 +71,10 @@ void Board::Open() {
     STATUS("Serial port was opened.", Level::INFO);
     serial.FlushSerialBuffers();
     SerialInit();
+}
+
+int Board::GetSampleTime() {
+    return optionValues_.sampleTime_s;
 }
 
 void Board::SerialInit() {

@@ -1,51 +1,94 @@
-// Code for testing the communication initialization.
+//==================================================================
+//  
+//  File: board.ino
+//  Description: Code for the board.
+//  Author: Tomas Machacek
+//  Date: 2 Jan 2023
+//  Notes: N/A
+//
+//==================================================================
 
+// sustem headers
+#include <MPU9250_WE.h>
+#include <Wire.h>
+
+// Adress of the sensor.
+#define MPU9240_ADDRESS 0x68
+
+// Terminal symbols.
 #define CR '\r'
 #define FF '\f'
 
-const char init_ = 'i';
-unsigned long prevTime_ms;
-const unsigned int period_ms = 10;
-float randomNumber;
+// Init message.
+#define __INIT__ 'i'
 
+// Create new imu.
+MPU9250_WE imu = MPU9250_WE(MPU9240_ADDRESS);
+
+// Timing variables.
+unsigned long prevTime_ms = 0;
+unsigned long initTime_ms;
+const unsigned int period_ms = 10;
+bool first = true;
+
+// Setup loop.
 void setup() {
-    Serial.begin(9600, SERIAL_8N1);
-    randomSeed(analogRead(0));
+    
+    // Initialize Wire. 
+    Wire.begin();
+
+    // Auto offset the sensor.
+    imu.autoOffsets();
+
+    // Set parameters for the imu.
+    imu.setSampleRateDivider(4);
+    imu.setGyrRange(MPU9250_GYRO_RANGE_250);
+    imu.setAccRange(MPU9250_ACC_RANGE_2G);
+
+    // Start serial communication.
+    Serial.begin(115200, SERIAL_8N1);
+
+    // If the serial initialization was successfull than send __INIT__.
     if (Serial) {
-        Serial.print(init_);
+        Serial.print(__INIT__);
         delay(100);
     }
 }
 
 void loop() {
-    if (millis() - prevTime_ms >= period_ms) {
-        prevTime_ms = millis();
 
-        Serial.print(CR);
-        Serial.print(micros() / 1000000.0, 10);
-
-        randomNumber = random(1, 10) / 31.0;
-        Serial.print(FF);
-        Serial.print(randomNumber, 6);
-
-        randomNumber = random(1, 10) / 31.0;
-        Serial.print(FF);
-        Serial.print(randomNumber, 6);
-
-        randomNumber = random(1, 10) / 31.0;
-        Serial.print(FF);
-        Serial.print(randomNumber, 6);
-
-        randomNumber = random(1, 10) / 31.0;
-        Serial.print(FF);
-        Serial.print(randomNumber, 6);
-
-        randomNumber = random(1, 10) / 31.0;
-        Serial.print(FF);
-        Serial.print(randomNumber, 6);
-
-        randomNumber = random(1, 10) / 31.0;
-        Serial.print(FF);
-        Serial.print(randomNumber, 6);
+    // Every period_ms send imu data.
+    if (micros() - prevTime_ms >= period_ms * 1000) {
+        prevTime_ms = micros();
+        PrintData();
     }
+}
+
+void PrintData() {
+    
+    // Get values from imu.
+    xyzFloat acc = imu.getGValues();
+    xyzFloat gyr = imu.getGyrValues();
+    
+    // Register time slip.
+    if (first) {
+        first = false;
+        initTime_ms = micros();
+    }
+
+    // Print message containing the values from accelerometer and gyroscope.
+    Serial.print(FF);
+    Serial.print(micros() - initTime_ms);
+    Serial.print(CR);
+    Serial.print(acc.x, 6);
+    Serial.print(CR);
+    Serial.print(acc.y, 6);
+    Serial.print(CR);
+    Serial.print(acc.z, 6);
+    Serial.print(CR);
+    Serial.print(gyr.x, 6);
+    Serial.print(CR);
+    Serial.print(gyr.y, 6);
+    Serial.print(CR);
+    Serial.print(gyr.z, 6);
 }

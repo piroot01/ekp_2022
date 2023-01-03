@@ -21,7 +21,7 @@
 
 class Board {
 public:
-    
+
     // Create public instance of _Serial class.
     _Serial serial;
 
@@ -33,6 +33,9 @@ public:
 
     // Method for initialization of the board-pc communication.
     void Open();
+
+    // Method for obtaining sampleTime from config.
+    int GetSampleTime();
 
 private:
 
@@ -54,6 +57,7 @@ private:
         Parity parity;
         NumStopBits numStopBits;
         int32_t initTimeout_ms;
+        int sampleTime_s;
     } OptionValues;
 
     // Default option values.
@@ -64,6 +68,7 @@ private:
         const std::string parity = "none";
         const int numStopBits = 1;
         const int initTimeout_ms = 2000;
+        const int sampleTime_s = 10;
     } OptionDefaultValues;
 
     // Tags for the pptions.
@@ -74,6 +79,7 @@ private:
         const std::string parity = "parity";
         const std::string numStopBits = "number_of_stop_bits";
         const std::string initTimeout = "init_timeout";
+        const std::string sampleTime = "sample_time";
     } OptionTags;
 
     // Instances of the structs.

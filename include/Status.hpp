@@ -28,7 +28,7 @@ public:
                 std::cout << "\33[32m" << "[INFO]:\33[0m\33[1m " << description << "\33[0m\n";
                 break;
             case Level::WARNING:
-                std::cout << "\33[33m" << "[WARNING]:\33[0m\33[1m " << description << "\33[0m\n";
+                std::cout << "\33[33m" << "[WARNING]:\33[0m\33[1m " << description << "\33[0m";
                 break;
             default:
                 break;
