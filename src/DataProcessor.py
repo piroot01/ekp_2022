@@ -22,21 +22,22 @@ outputFile = "data/"
 sampleRate = 200
 
 # Gain of the filter.
-beta = 10
-accelerationRejection = 5
+beta = 6
+accelerationRejection = 30
 magneticRejection = 0
+n = 20
 
 # Very important parameter specifying when the imu is moving.
-accelerationTreshold = 3
+accelerationTreshold = 0.6
 margin = int(0.1 * sampleRate)
 
 # Generate 2D array from csv.
 data = np.genfromtxt(outputFile + "output.csv", delimiter = ",")
 
 # Split the data into subarrays.
-timeStamp = data[:, 0] / 1000000
-accelerometer = data[:, 1:4]
-gyroscope = data[:, 4:7]
+timeStamp = (data[:, 0] - data[0, 0]) / 1000000
+accelerometer = data[:, 1:4] * 2.0 / 32767.0 
+gyroscope = data[:, 4:7] * 250.0 / 32767.0
 
 # Plot raw data from imu.
 rawDataFig, rawDataAxes = plt.subplots(nrows = 2, sharex = True)
@@ -63,7 +64,7 @@ rawDataFig.savefig(outputFile + "raw_data.png", dpi = 300)
 # Instanciate imufusion.
 offset = imufusion.Offset(sampleRate)
 ahrs = imufusion.Ahrs()
-ahrs.settings = imufusion.Settings(beta, accelerationRejection, magneticRejection, 5 * sampleRate)
+ahrs.settings = imufusion.Settings(beta, accelerationRejection, magneticRejection, n * sampleRate)
 
 # Create arrayy of time deltas between entries.
 timeDelta = np.diff(timeStamp, prepend = timeStamp[0])

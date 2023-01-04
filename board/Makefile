@@ -1,6 +1,12 @@
 ARDUINO_CLI = arduino-cli
-BOARD = arduino:avr:uno
-PORT ?= /dev/ttyACM0
+
+# For Arduino UNO.
+# BOARD = arduino:avr:uno
+# PORT ?= /dev/ttyACM0
+
+# For ESP32 dev kit.
+BOARD = esp32:esp32:esp32
+PORT ?= /dev/ttyUSB0
 
 all: compile upload
 

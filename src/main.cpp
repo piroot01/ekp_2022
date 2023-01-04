@@ -32,7 +32,7 @@ int main() {
     
     std::ofstream outputFile;
     char data;
-    int i = 0;
+    long long int i = 0;
     std::vector<std::string> readBuffer;
     std::string tmpBuffer;
     std::chrono::time_point<std::chrono::steady_clock> prevUpdate;
@@ -56,7 +56,9 @@ int main() {
         pBoard->serial.Read(data);
 
         if (data == FF) {
-            if (i != 0) {
+            if (i <= 1) {
+                tmpBuffer.clear();
+            } else {
                 readBuffer.push_back(tmpBuffer);
                 tmpBuffer.clear();
             }

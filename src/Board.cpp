@@ -70,7 +70,9 @@ void Board::Open() {
     serial.Open();
     STATUS("Serial port was opened.", Level::INFO);
     serial.FlushSerialBuffers();
-    SerialInit();
+
+    // Use with arduino boards.
+//    SerialInit();
 }
 
 int Board::GetSampleTime() {
