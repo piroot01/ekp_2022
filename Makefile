@@ -5,7 +5,7 @@ CFLAGS += -I./include
 SOURCES = src/FastAtoi.cpp src/ConfigReader.cpp src/OptionAdapter.cpp src/Serial.cpp src/Board.cpp src/main.cpp
 OBJECTS = $(SOURCES:src/%.cpp=build/%.o)
 
-EXECUTABLE = output
+EXECUTABLE = program
 
 all: $(EXECUTABLE)
 
@@ -19,4 +19,4 @@ build/%.o: src/%.cpp
 .PHONY: clean
 
 clean:
-	rm -rf $(EXECUTABLE) $(OBJECTS) build
+	rm -rf $(EXECUTABLE) $(OBJECTS) build data/*

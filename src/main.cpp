@@ -9,6 +9,7 @@
 //==================================================================
 
 // system headers
+#include <cstdlib>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -37,7 +38,7 @@ int main() {
     std::chrono::time_point<std::chrono::steady_clock> prevUpdate;
     int numUpdates = 0;
     std::string updateMsg;
-
+    std::string answer;
 
     // Initialize communication.
     Board* pBoard = Board::GetInstance();
@@ -82,17 +83,40 @@ int main() {
     // Clean output buffer.
     std::cout << std::endl;
 
-    // Post status message about number of entries.
-    STATUS("It was saved " + std::to_string(i - 1) + " entries to: " + output, Level::INFO);
-
-    // Save the data.
-    for (std::string& it : readBuffer)
-        outputFile << it << '\n';
-
-    // Close the serial communication.
     pBoard->serial.Close();
     pBoard->ReleaseInstance();
+
+    // Manage the read data.
+    STATUS("It was registered " + std::to_string(i - 1) + " entries.", Level::INFO);
+    STATUS("Save the data into " + output + "? [Y/n] ", Level::INPUT);
+    std::getline(std::cin, answer);
+
+    if (answer == "y" || answer == "Y" || answer.empty()) {
+        
+        // Save the data.
+        for (std::string& it : readBuffer)
+            outputFile << it << '\n';
+        outputFile.close();
+
+        answer.clear();
+
+        STATUS("Process the data? [Y/n] ", Level::INPUT);
+        std::getline(std::cin, answer);
+
+        if (answer == "y" || answer == "Y" || answer.empty()) {
+            STATUS("Processing the data.", Level::INFO);
+            std::system("python src/DataProcessor.py");
+            std::system("convert data/raw_data.png data/euler_angles.png data/acceleration.png data/velocity.png data/position.png data/position_3D.png data/output.pdf");
+        }
+
+        answer.clear();
+        STATUS("Show output.pdf? [Y/n] ", Level::INPUT);
+        std::getline(std::cin, answer);
+
+        if (answer == "y" || answer == "Y" || answer.empty())
+            std::system("zathura data/output.pdf");
+        
+    }
+
     return 0;
 }
-
-

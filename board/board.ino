@@ -28,7 +28,7 @@ MPU9250_WE imu = MPU9250_WE(MPU9240_ADDRESS);
 // Timing variables.
 unsigned long prevTime_ms = 0;
 unsigned long initTime_ms;
-const unsigned int period_ms = 10;
+const unsigned int period_us = 5000;
 bool first = true;
 
 // Setup loop.
@@ -41,9 +41,13 @@ void setup() {
     imu.autoOffsets();
 
     // Set parameters for the imu.
-    imu.setSampleRateDivider(4);
+    imu.setSampleRateDivider(0);
     imu.setGyrRange(MPU9250_GYRO_RANGE_250);
+    imu.enableGyrDLPF();
+    imu.setGyrDLPF(MPU6500_DLPF_0);
     imu.setAccRange(MPU9250_ACC_RANGE_2G);
+    imu.enableAccDLPF(true);
+    imu.setAccDLPF(MPU6500_DLPF_0);
 
     // Start serial communication.
     Serial.begin(115200, SERIAL_8N1);
@@ -58,7 +62,7 @@ void setup() {
 void loop() {
 
     // Every period_ms send imu data.
-    if (micros() - prevTime_ms >= period_ms * 1000) {
+    if (micros() - prevTime_ms >= period_us) {
         prevTime_ms = micros();
         PrintData();
     }
@@ -80,15 +84,15 @@ void PrintData() {
     Serial.print(FF);
     Serial.print(micros() - initTime_ms);
     Serial.print(CR);
-    Serial.print(acc.x, 6);
+    Serial.print(acc.x);
     Serial.print(CR);
-    Serial.print(acc.y, 6);
+    Serial.print(acc.y);
     Serial.print(CR);
-    Serial.print(acc.z, 6);
+    Serial.print(acc.z);
     Serial.print(CR);
-    Serial.print(gyr.x, 6);
+    Serial.print(gyr.x);
     Serial.print(CR);
-    Serial.print(gyr.y, 6);
+    Serial.print(gyr.y);
     Serial.print(CR);
-    Serial.print(gyr.z, 6);
+    Serial.print(gyr.z);
 }

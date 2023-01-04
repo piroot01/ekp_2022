@@ -15,6 +15,7 @@
 #include <iostream>
 
 enum class Level {
+    INPUT,
     INFO,
     WARNING,
 };
@@ -24,6 +25,9 @@ public:
 
     Status(const std::string description, const Level level) {
         switch (level) {
+            case Level::INPUT:
+                std::cout << "\33[34m" << "[INPUT]:\33[0m\33[1m " << description << "\33[0m";
+                break;
             case Level::INFO:
                 std::cout << "\33[32m" << "[INFO]:\33[0m\33[1m " << description << "\33[0m\n";
                 break;
