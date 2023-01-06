@@ -64,7 +64,7 @@ Program slouží pouze k inicializaci senzoru MPU9250, periodickému záznamu da
 
 \section{Popis kódu na počítači}
 
-Na počítači probíhá záznam (uložení) a zpracování dat. V souboru $board.conf$  se definují parametry sériové komunikace (musí být shodné s těma na ESP). Po spuštění programu se inicializuje sériový port podle konfiguračního souboru (pakliže se nastavení v souboru neuvede, nastaví se na základní hodnotu), poté se spustí záchyt dat. Po uplynutí časové konstanty (opět se dá nastavit v konfiguračním souboru), se mohou data buď uložit či zahodit. Data se ukládají do složky $data$ do souboru $output.csv$. Dále se mohou zpracovat prostřednicvím skriptu v pythonu, který vygeneruje grafy (nezpracované hodnoty, Eulerovy úhly, zrychlení, rychlost, pozici ve složkách a ve 3D). Výstupem je pdf soubor obsahující všechny grafy.
+Na počítači probíhá záznam (uložení) a zpracování dat. V souboru $board.conf$  se definují parametry sériové komunikace (musí být shodné s parametry na ESP). Po spuštění programu se inicializuje sériový port podle konfiguračního souboru (pakliže se nastavení v souboru neuvede, nastaví se na základní hodnotu), poté se spustí záchyt dat. Po uplynutí časové konstanty (opět se dá nastavit v konfiguračním souboru), se mohou data buď uložit či zahodit. Data se ukládají do složky $data$ do souboru $output.csv$. Dále se mohou zpracovat prostřednicvím skriptu v pythonu, který vygeneruje grafy (nezpracované hodnoty, Eulerovy úhly, zrychlení, rychlost, pozici ve složkách a ve 3D). Výstupem je pdf soubor obsahující všechny grafy.
 
 \subsection{Obsluha sériového portu}
 
@@ -81,7 +81,7 @@ Prostřednictvím Madgwickova filtru jsou hodnoty zpracovány do Eulerových úh
     \end{math}
 \end{center}
 
-Rychlost je zobrazena složkově v grafu. Je převedena na graf zobrazující polohu po složkách.
+Rychlost je zobrazena složkově v grafu. Dále je převedena na polohu po složkách.
 
 \begin{center}
     \begin{math}
