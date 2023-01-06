@@ -4,12 +4,15 @@
 //  Description: Code for the board.
 //  Author: Tomas Machacek
 //  Date: 2 Jan 2023
-//  Notes: N/A
+//  Notes: Heavily based on 
+//         https://github.com/wollewald/MPU9250_WE/
+//         blob/main/examples/MPU6500_all_data/MPU6500_all_data.ino
 //
 //==================================================================
 
 // sustem headers
 #include <Wire.h>
+#include <MPU6500_WE.h>
 
 // Adress of the sensor.
 #define MPU9250_ADDRESS 0x68
@@ -18,56 +21,28 @@
 #define CR '\r'
 #define FF '\f'
 
-#define GYRO_FULL_SCALE_250_DPS 0x00 
-#define GYRO_FULL_SCALE_500_DPS 0x08
-#define GYRO_FULL_SCALE_1000_DPS 0x10
-#define GYRO_FULL_SCALE_2000_DPS 0x18
- 
-#define ACC_FULL_SCALE_2_G 0x00 
-#define ACC_FULL_SCALE_4_G 0x08
-#define ACC_FULL_SCALE_8_G 0x10
-#define ACC_FULL_SCALE_16_G 0x18
+// Creating new instance of MPU6500_WE class.
+MPU6500_WE imu = MPU6500_WE(MPU9250_ADDRESS);
 
 // Init message, use with arduino boards.
 //#define __INIT__ 'i'
 
-// Function for reading Nbytes from imu.
-void Read(uint8_t Address, uint8_t Register, uint8_t Nbytes, uint8_t* Data) {
-
-    // Set register address
-    Wire.beginTransmission(Address);
-    Wire.write(Register);
-    Wire.endTransmission();
-
-    // Read Nbytes
-    Wire.requestFrom(Address, Nbytes); 
-    uint8_t index=0;
-    while (Wire.available())
-        Data[index++] = Wire.read();
-}
-
-// Function for write a byto to register.
-void WriteByte(uint8_t Address, uint8_t Register, uint8_t Data) {
-
-    // Set register address
-    Wire.beginTransmission(Address);
-    Wire.write(Register);
-    Wire.write(Data);
-    Wire.endTransmission();
-}
-
-// Timing variables.
 unsigned long prevTime_ms = 0;
-const unsigned int period_us = 5000;
 
-// Setup loop.
+// Logging frequency set to 400Hz.
+const unsigned int period_us = 1000000 / 400;
+
+// Variables for storing accelerometer and gyroscope data.
+xyzFloat acc;
+xyzFloat gyr;
+
 void setup() {
 
     // Initialize Wire. 
     Wire.begin();
 
     // Start serial communication.
-    Serial.begin(115200, SERIAL_8N1);
+    Serial.begin(460800, SERIAL_8N1);
 
     // Use for arduino boards.
 //    if(Serial) {
@@ -75,8 +50,33 @@ void setup() {
 //        delay(100);
 //    }
 
-    WriteByte(MPU9250_ADDRESS, 27, GYRO_FULL_SCALE_250_DPS);
-    WriteByte(MPU9250_ADDRESS, 28, ACC_FULL_SCALE_2_G);
+    // Initialize imu.
+    imu.init();
+
+    // Store actual offset of the accelerometer and gyroscope.
+    imu.autoOffsets();
+
+    // Enable low pass filter for gyroscope.
+    imu.enableGyrDLPF();
+
+    // Set the filter to max.
+    imu.setGyrDLPF(MPU6500_DLPF_6);
+
+    // Sample rate divider to 0.
+    imu.setSampleRateDivider(0);
+
+    // Set the gyroscope range to 250 deg/s.
+    imu.setGyrRange(MPU6500_GYRO_RANGE_250);
+
+    // Enable low pass filter for accelerometer.
+    imu.enableAccDLPF(true);
+
+    // Set the filter to max.
+    imu.setAccDLPF(MPU6500_DLPF_6);
+
+    // Set the accelerometer range to 4g.
+    imu.setAccRange(MPU6500_ACC_RANGE_4G);
+    delay(200);
 }
 
 void loop() {
@@ -85,32 +85,30 @@ void loop() {
     if (micros() - prevTime_ms >= period_us) {
         prevTime_ms = micros();
 
-        // Read accelerometer and gyroscope data.
-        uint8_t buffer[14];
-        Read(MPU9250_ADDRESS, 0x3B, 14, buffer);
-
-        // Create 16 bits values from 8 bits data.
-        int16_t ax = -(buffer[0] << 8 | buffer[1]);
-        int16_t ay = -(buffer[2] << 8 | buffer[3]);
-        int16_t az = buffer[4] << 8 | buffer[5];
-        int16_t gx = -(buffer[8]<<8 | buffer[9]);
-        int16_t gy = -(buffer[10]<<8 | buffer[11]);
-        int16_t gz = buffer[12]<<8 | buffer[13];
+        // Get data from sensor.
+        acc = imu.getGValues();
+        gyr = imu.getGyrValues();
 
         // Send the data.
-        Serial.print(FF);
-        Serial.print(micros());
-        Serial.print(CR);
-        Serial.print(ax, DEC);
-        Serial.print(CR);
-        Serial.print(ay, DEC);
-        Serial.print(CR);
-        Serial.print(az, DEC);
-        Serial.print(CR);
-        Serial.print(gx, DEC);
-        Serial.print(CR);
-        Serial.print(gy, DEC);
-        Serial.print(CR);
-        Serial.print(gz, DEC);
+        SendData();
     }
+}
+
+// Function for sending formatted dato to serial.
+// It sends timestamp along with accelerometer and gyroscope data.
+void SendData() {
+    Serial.print(FF);
+    Serial.print(micros());
+    Serial.print(CR);
+    Serial.print(acc.x);
+    Serial.print(CR);
+    Serial.print(acc.y);
+    Serial.print(CR);
+    Serial.print(acc.z);
+    Serial.print(CR);
+    Serial.print(gyr.x);
+    Serial.print(CR);
+    Serial.print(gyr.y);
+    Serial.print(CR);
+    Serial.print(gyr.z);
 }
