@@ -6,57 +6,61 @@ date: Jan 3, 2023
 
 # Obsah
 
- - Vyčítání dat
- - Přenos dat do počítače
- - Zpracování do grafů
+ - Hardware
+ - Software
  - Průběh záznamu
  - Výsledky - přehled grafů
+ - Možnosti, návrhy na zlepšení
 
-# 1. Vyčítání dat
+# Hardware
 
  - ESP32
- - MPU9250
- - I2C
+ - MPU9250 (MPU6050)
+ - I2C, UART
 
-# 2. Přenos dat do počítače
+# Schéma zapojení
 
- - UART
+![](pic/scheme.png){ width=75% }
+
+# Software
+
  - C++ (termios, termbits)
+ - python (matplotlib, imufusion)
 
-# 3. Zpracování dat
-
- - python
- - Madgwickův algoritmus (imufusion)
- - grafy (matplotlib)
-
-# 4. Průběh záznamu dat
+# Průběh záznamu dat
 
  (a) board.conf
  (b) program
  (c) data/
 
-# 5. Grafy - Akcelerometr a gyroskop
+# Grafy - Akcelerometr a gyroskop
 
 ![](pic/raw_data.png){ width=100% }
 
-# 5. Grafy - Eulerovy úhly
+# Grafy - Eulerovy úhly
 
 ![](pic/euler_angles.png){ width=100% }
 
-# 5. Grafy - Zrychelní
+# Grafy - Zrychelní
 
 ![](pic/acceleration.png){ width=100% }
 
-# 5. Grafy - Rychlost
+# Grafy - Rychlost
 
 ![](pic/velocity.png){ width=100% }
 
-# 5. Grafy - Pozice
+# Grafy - Pozice
 
 ![](pic/position.png){ width=100% }
 
-# 5. Grafy - Pozice ve 3D
+# Grafy - Pozice ve 3D
 
 ![](pic/position_3D.png){ width=100% }
+
+# Možnosti, návrhy na zlepšení
+
+ - nakalibrováno na krátké záznamy (cca. 5 vteřin)
+ - hrubá přesnost
+ - zlepšení by poskytlo IMU s magnetometrem a kvalitnějšími senzory
 
 # Děkuji za pozornost, dotazy?
